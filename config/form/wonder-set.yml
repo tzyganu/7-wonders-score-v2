@@ -1,0 +1,18 @@
+options:
+  id: wonder-sets
+  title: Wonder sets
+  formOptions:
+    action: 'entity/save'
+    actionParams:
+      entity: 'wonder-set'
+form:
+  class: \App\Form\WonderSet
+  action: entity/save
+  actionParams:
+    entity: 'wonder-set'
+buttons:
+  list:
+    label: Wonder Set List
+    url: 'entity/list'
+    params:
+      entity: 'wonder-set'

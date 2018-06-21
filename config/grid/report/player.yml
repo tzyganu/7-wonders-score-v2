@@ -1,0 +1,64 @@
+options:
+  emptyMessage: No Reports for the selected filters
+  id: lpayer-report
+  title: Player reports
+columns:
+  player:
+    type: link
+    labelKey: player_name
+    label: Player
+    url: 'player/view'
+    params:
+      id: player_id
+  wonder:
+    type: link
+    labelKey: wonder_name
+    label: Wonder
+    url: 'wonder/view'
+    params:
+      id: wonder_id
+  side:
+    type: text
+    index: side
+    label: Side
+  player_count:
+    type: integer
+    index: player_count
+    label: Player count
+  played:
+    type: integer
+    index: played
+    label: Played
+  won:
+    type: integer
+    index: won
+    label: Won
+  won_percentage:
+    type: percentage
+    index: won_percentage
+    label: "Won %"
+  last:
+    type: integer
+    index: last
+    label: Last
+  last_percentage:
+    type: percentage
+    index: last_percentage
+    label: "Last %"
+  total_score:
+    type: integer
+    index: total_score
+    label: "Total Score"
+  average_score:
+    type: decimal
+    index: average_score
+    label: Average score
+  max_points:
+    type: integer
+    index: max_points
+    label: Max Points
+  min_points:
+    type: integer
+    index: min_points
+    label: Min Points
+

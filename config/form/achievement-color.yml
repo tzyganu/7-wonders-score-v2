@@ -1,0 +1,14 @@
+options:
+  id: achievement-color
+  title: Achievement Color
+form:
+  class: \App\Form\AchievementColor
+  action: entity/save
+  actionParams:
+    entity: 'achievement-color'
+buttons:
+  list:
+    label: Achievement Color List
+    url: 'entity/list'
+    params:
+      entity: 'achievement-color'

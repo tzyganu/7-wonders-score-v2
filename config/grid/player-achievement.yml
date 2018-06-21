@@ -1,0 +1,35 @@
+options:
+  emptyMessage: This player has no achievements so far
+  id: player-achievement
+  title: Player achievments
+columns:
+  name:
+    type: link
+    labelKey: getAchievement.getName
+    label: Achievement
+    url: 'achievement/view'
+    params:
+      id: getAchievement.getId
+  game:
+    type: link
+    labelKey: getScore.getGame.getId
+    label: Game
+    url: 'game/view'
+    params:
+      id: getScore.getGame.getId
+    defaultSort: true
+    defaultSortDir: ASC
+  wonder:
+    type: link
+    label: Wonder
+    labelKey: getScore.getWonder.getName
+    url: 'entity/edit'
+    urlParams:
+      entity: wonder
+    params:
+      id: getScore.getWonder.getId
+  side:
+    type: text
+    index: getScore.getSide
+    label: Side
+

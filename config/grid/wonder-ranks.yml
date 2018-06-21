@@ -1,0 +1,78 @@
+options:
+  emptyMessage: No Stats for this wonder
+  id: wonder-ranks
+  title: Wonder ranks
+  useDataTable: false
+columns:
+  rank_1:
+    type: integer
+    index: rank.1
+    label: Wins
+  rank_1_percent:
+    type: percentage
+    index: rank_percent.1
+    label: Wins %
+  rank_2:
+    type: integer
+    index: rank.2
+    label: Rank 2
+  rank_2_percent:
+    type: percentage
+    index: rank_percent.2
+    label: "% Rank 2"
+  rank_3:
+    type: integer
+    index: rank.3
+    label: Rank 3
+  rank_3_percent:
+    type: percentage
+    index: rank_percent.3
+    label: "% Rank 3"
+  rank_4:
+    type: integer
+    index: rank.4
+    label: Rank 4
+  rank_4_percent:
+    type: percentage
+    index: rank_percent.4
+    label: "% Rank 4"
+  rank_5:
+    type: integer
+    index: rank.5
+    label: Rank 5
+  rank_5_percent:
+    type: percentage
+    index: rank_percent.5
+    label: "% Rank 5"
+  rank_6:
+    type: integer
+    index: rank.6
+    label: Rank 6
+  rank_6_percent:
+    type: percentage
+    index: rank_percent.6
+    label: "% Rank 6"
+  rank_7:
+    type: integer
+    index: rank.7
+    label: Rank 7
+  rank_7_percent:
+    type: percentage
+    index: rank_percent.7
+    label: "% Rank 7"
+  rank_8:
+    type: integer
+    index: rank.8
+    label: Rank 8
+  rank_8_percent:
+    type: percentage
+    index: rank_percent.8
+    label: "% Rank 8"
+  rank_last:
+    type: integer
+    index: rank.last
+    label: Last
+  rank_last_percent:
+    type: percentage
+    index: rank_percent.last
+    label: "% Last"

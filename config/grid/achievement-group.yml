@@ -1,0 +1,30 @@
+options:
+  emptyMessage: There are no achievement groups.
+  id: achievement_group
+  title: Achievement groups
+columns:
+  id:
+    type: integer
+    index: getId
+    label: Id
+    defaultSort: true
+  name:
+    type: text
+    index: getName
+    label: Name
+  edit:
+    type: link
+    index: getId
+    label: Edit
+    url: 'entity/edit'
+    urlParams:
+     entity: achievement-group
+    sortable: false
+    params:
+      id: getId
+buttons:
+  list:
+    label: Add New Achievement Group
+    url: 'entity/new'
+    params:
+      entity: 'achievement-group'

@@ -1,0 +1,18 @@
+options:
+  id: wonder
+  title: Wonder
+  formOptions:
+    action: 'entity/save'
+    actionParams:
+      entity: 'wonder'
+form:
+  class: \App\Form\Wonder
+  action: entity/save
+  actionParams:
+    entity: 'wonder'
+buttons:
+  list:
+    label: Wonder List
+    url: 'entity/list'
+    params:
+      entity: 'wonder'

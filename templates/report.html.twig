@@ -1,0 +1,13 @@
+{% extends "default.html.twig" %}
+{% block footer %}
+    <script type="text/javascript" src="{{ asset('7w/select-all.js') }}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $('.js-datepicker').datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
+            $('select').select2();
+            $('.select-all').selectAll();
+        });
+    </script>
+{% endblock %}

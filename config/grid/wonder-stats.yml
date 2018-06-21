@@ -1,0 +1,18 @@
+options:
+  emptyMessage: No Stats for this wonder
+  id: wonder-stats
+  title: Wonder stats
+  useDataTable: false
+columns:
+  played:
+    type: integer
+    index: played
+    label: Played
+  total_points:
+    type: integer
+    index: total_points
+    label: Total Points
+  average_score:
+    type: decimal
+    index: average_score
+    label: Average Score

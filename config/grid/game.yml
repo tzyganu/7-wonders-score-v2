@@ -1,0 +1,47 @@
+options:
+  emptyMessage: Play some games.
+  id: games
+  title: Games
+columns:
+  id:
+    type: integer
+    index: getId
+    label: Id
+    defaultSort: true
+    defaultSortDir: DESC
+  date:
+    type: datetime
+    index: getPlayedOn
+    label: Played On
+  playerCount:
+    type: integer
+    index: getPlayerCount
+    label: Player Count
+  winner:
+    type: text
+    index: getWinnerName
+    label: Winner
+  leaders:
+    type: yesno
+    index: getLeaders
+    label: Played with leaders
+  cities:
+    type: yesno
+    index: getCities
+    label: Played with cities
+  average:
+    type: decimal
+    index: getScoreAverage
+    label: Score average
+  view:
+    type: link
+    index: getId
+    label: View
+    url: 'game/view'
+    sortable: false
+    params:
+      id: getId
+buttons:
+  new:
+    label: Add New Game score
+    url: 'game/new'

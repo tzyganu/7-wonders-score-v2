@@ -1,0 +1,33 @@
+options:
+  emptyMessage: No Achievements with this wonder so far
+  id: wonder-achievement
+  title: wonder achievments
+columns:
+  name:
+    type: link
+    labelKey: getAchievement.getName
+    label: Achievement
+    url: 'achievement/view'
+    params:
+      id: getAchievement.getId
+  game:
+    type: link
+    labelKey: getScore.getGame.getId
+    label: Game
+    url: 'game/view'
+    params:
+      id: getScore.getGame.getId
+    defaultSort: true
+    defaultSortDir: ASC
+  wonder:
+    type: link
+    label: Player
+    labelKey: getScore.getPlayer.getName
+    url: 'player/view'
+    params:
+      id: getScore.getPlayer.getId
+  side:
+    type: text
+    index: getScore.getSide
+    label: Side
+

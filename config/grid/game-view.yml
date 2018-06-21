@@ -1,0 +1,6 @@
+options:
+  emptyMessage: Game is empty. Huh?
+  id: game
+  title: Game
+columns:
+  _class: App\Grid\Provider\Game

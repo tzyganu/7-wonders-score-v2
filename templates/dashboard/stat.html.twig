@@ -1,0 +1,16 @@
+<div class="col-lg-4">
+    <div class="small-box bg-teal">
+        <div class="inner">
+            <h3>{{ label }}: {{ value }}</h3>
+            <p>
+            {%  for player in players  %}
+                <a href="{{ url("game/view", {id: player.game}) }}"><span>{{ player.name }}</span></a>
+                {#(<a href="{{ url("game/view", {id: player.game}) }}" class="small-box-footer">Game {{ player.game }}</a>)#}
+            {% endfor %}
+            </p>
+        </div>
+        <div class="icon">
+            <i class="fa fa-check-square-o"></i>
+        </div>
+    </div>
+</div>

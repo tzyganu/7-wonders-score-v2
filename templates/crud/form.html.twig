@@ -1,0 +1,20 @@
+{% block content %}
+    {{ form_start(formWrapper.getFormView()) }}
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title">{{ formWrapper.getTitle() }}</h3>
+            {% if formWrapper.getButtons()|length > 0 %}
+                {% for button in formWrapper.getButtons() %}
+                    <div class="pull-right">
+                        <a href="{{ button.getUrl()}}" class="{{ button.getClass() }}">{{ button.getLabel() }}</a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        {{ form_widget(formWrapper.getFormView()) }}
+        <div class="box-footer">
+            <button type="submit" class="btn btn-info">Submit</button>
+        </div>
+    </div>
+    {{ form_end(formWrapper.getFormView()) }}
+{% endblock %}

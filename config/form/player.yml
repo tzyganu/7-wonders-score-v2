@@ -1,0 +1,14 @@
+options:
+  id: players
+  title: Players
+form:
+  class: \App\Form\Player
+  action: entity/save
+  actionParams:
+    entity: 'player'
+buttons:
+  list:
+    label: Player List
+    url: 'entity/list'
+    params:
+      entity: 'player'

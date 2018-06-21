@@ -1,0 +1,23 @@
+options:
+  emptyMessage: No achievements in this game
+  id: game-achievements
+  title: Game Achievements
+columns:
+  player:
+    type: link
+    labelKey: getPlayer.getName
+    label: Player
+    url: 'player/view'
+    params:
+      id: getPlayer.getId
+  achievement:
+    type: link
+    labelKey: getAchievement.getName
+    label: Achievement
+    url: 'achievement/view'
+    params:
+      id: getAchievement.getId
+  color:
+    type: text
+    index: getAchievement.getAchievementColor.getName
+    label: Color

@@ -1,0 +1,35 @@
+options:
+  emptyMessage: No player has this achievement
+  id: achievement_player
+  title: Players with this achievement
+columns:
+  name:
+    type: link
+    labelKey: getPlayer.getName
+    label: Player
+    url: 'player/view'
+    params:
+      id: getScore.getPlayer.getId
+  game:
+    type: link
+    labelKey: getScore.getGame.getId
+    label: Game
+    url: 'game/view'
+    params:
+      id: getScore.getGame.getId
+    defaultSort: true
+    defaultSortDir: ASC
+  wonder:
+    type: link
+    label: Wonder
+    labelKey: getScore.getWonder.getName
+    url: 'entity/edit'
+    urlParams:
+      entity: wonder
+    params:
+      id: getScore.getWonder.getId
+  side:
+    type: text
+    index: getScore.getSide
+    label: Side
+

@@ -1,0 +1,9 @@
+twig:
+    paths: ['%kernel.project_dir%/templates']
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    form_themes: ['bootstrap_4_layout.html.twig']
+    globals:
+      app_version: '@App\Version'
+      app_menu: '@App\Page\Menu'
+      user_section: '@App\Page\UserSection'

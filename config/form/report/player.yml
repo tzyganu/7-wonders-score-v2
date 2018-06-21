@@ -1,0 +1,7 @@
+options:
+  id: player-reports
+  title: Player reports
+form:
+  class: \App\Form\Report\Player
+  action: report/player
+  method: get

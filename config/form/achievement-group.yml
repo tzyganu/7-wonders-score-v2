@@ -1,0 +1,14 @@
+options:
+  id: echievement-group
+  title: Achievement Group
+form:
+  class: \App\Form\AchievementGroup
+  action: entity/save
+  actionParams:
+    entity: 'achievement-group'
+buttons:
+  list:
+    label: Achievement Group List
+    url: 'entity/list'
+    params:
+      entity: 'achievement-group'

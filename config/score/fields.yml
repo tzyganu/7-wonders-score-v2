@@ -1,0 +1,100 @@
+military_score:
+  long_label: "Military Score"
+  label: Military
+  grid_label: +
+  category: military
+military_five:
+  long_label: "Military 5 Token"
+  label: 5
+  grid_label: 5
+  category: military
+military_three:
+  long_label: "Military 3 Token"
+  label: 3
+  grid_label: 3
+  category: military
+military_one:
+  long_label: "Military 1 Token"
+  label: 1
+  grid_label: 1
+  category: military
+military_minus_one:
+  long_label: "Military -1 Token"
+  label: -1
+  grid_label: -1
+  category: military
+cash_score:
+  long_label: "Cash score"
+  label: "Cash"
+  grid_label: +
+  category: cash
+cash_coins:
+  long_label: "Cash coins"
+  label: "Coins"
+  grid_label: €
+  category: cash
+cash_minus_one:
+  long_label: "Cash minus one tokens"
+  label: "Cash -1"
+  grid_label: -1
+  category: cash
+wonder_score:
+  long_label: "Wonder Score"
+  label: "Wonder"
+  category: wonder
+  grid_label: +
+wonder_stage:
+  long_label: "Wonder Levels"
+  label: "levels"
+  category: wonder
+  grid_label: lvl
+civic_score:
+  long_label: "Civic Score"
+  label: "Civic"
+  category: civic
+  grid_label: ''
+trade_score:
+  long_label: "Trade Score"
+  label: "Trade"
+  category: trade
+  grid_label: ''
+science_score:
+  long_label: "Science Score"
+  label: "Science"
+  category: science
+  grid_label: +
+science_gear:
+  long_label: "Science Gears"
+  label: "Gear"
+  category: science
+  grid_label: '<span class="fa fa-gear"></span>'
+science_tablet:
+  long_label: "Science Tables"
+  label: "Tablet"
+  category: science
+  grid_label: '<span class="fa fa-tablet"></span>'
+science_compass:
+  long_label: "Science Compasses"
+  label: "Compass"
+  category: science
+  grid_label: Λ
+guild_score:
+  long_label: "Guilds Score"
+  label: "Guilds"
+  category: guild
+  grid_label: ''
+leaders_score:
+  long_label: "Leaders Score"
+  label: "Leaders"
+  category: leaders
+  grid_label: ''
+cities_score:
+  long_label: "Cities Score"
+  label: "Cities"
+  category: cities
+  grid_label: ''
+total_score:
+  long_label: "Total Score"
+  label: "Total"
+  category: total
+  grid_label: +

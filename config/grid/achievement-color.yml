@@ -1,0 +1,30 @@
+options:
+  emptyMessage: There are no achievement colors.
+  id: achievement-color
+  title: Achievement colors
+columns:
+  id:
+    type: integer
+    index: getId
+    label: Id
+    defaultSort: true
+  name:
+    type: text
+    index: getName
+    label: Name
+  edit:
+    type: link
+    index: getId
+    label: Edit
+    url: 'entity/edit'
+    urlParams:
+     entity: achievement-color
+    sortable: false
+    params:
+      id: getId
+buttons:
+  list:
+    label: Add New Achievement Color
+    url: 'entity/new'
+    params:
+      entity: 'achievement-color'

@@ -1,0 +1,54 @@
+options:
+  emptyMessage: There are no wonders.
+  id: wonder
+  title: Wonders
+columns:
+  id:
+    type: integer
+    index: getId
+    label: Id
+  name:
+    type: text
+    index: getName
+    label: Name
+    defaultSort: true
+  active:
+    type: yesno
+    index: getActive
+    label: Active
+  playable_with_leaders:
+    type: yesno
+    index: getPlayableWithLeaders
+    label: Playable with leaders
+  playable_without_leaders:
+    type: yesno
+    index: getPlayableWithoutLeaders
+    label: Playable without leaders
+  playable_with_cities:
+    type: yesno
+    index: getPlayableWithCities
+    label: Playable with Cities
+  playable_without_cities:
+    type: yesno
+    index: getPlayableWithoutCities
+    label: Playable without cities
+  official:
+    type: yesno
+    index: getOfficial
+    label: Official
+  edit:
+    type: link
+    index: getId
+    label: Edit
+    url: 'entity/edit'
+    urlParams:
+      entity: wonder
+    sortable: false
+    params:
+      id: getId
+buttons:
+  new:
+    label: Add New Wonder
+    url: 'entity/new'
+    params:
+      entity: wonder

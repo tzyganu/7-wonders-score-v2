@@ -1,0 +1,6 @@
+options:
+  emptyMessage: No games played so far
+  id: score
+  title: Player Scores
+columns:
+  _class: App\Grid\Provider\Game

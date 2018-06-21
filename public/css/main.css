@@ -1,0 +1,61 @@
+ul.alert {
+    list-style-type: none;
+}
+.form-group {
+    margin: 0 15px 15px 15px;
+    position: relative;
+    display: table;
+    border-collapse: separate;
+}
+
+#player-table {
+    width:99%;
+}
+.block-label {
+    display: block;
+}
+.yellow {
+    color: yellow;
+}
+.blue {
+    color: blue;
+}
+.green {
+    color: green;
+}
+.purple {
+    color: purple;
+}
+.black {
+    color: black;
+}
+.leaders {
+    color: white;
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+}
+.bg-achievement-bronze {
+    background-color: #CD7F32;
+}
+
+.bg-achievement-silver {
+    background-color: #C0C0C0;
+}
+
+.bg-achievement-gold {
+    background-color: #CFB53B;
+}
+
+.bg-achievement-platinum {
+    background-color: #e5e4e2;
+}
+
+.form-group {
+    width:97%;
+}
+#average .small-box {
+    min-height: 100px;
+}
+
+.score-form .form-group {
+    width: inherit;
+}

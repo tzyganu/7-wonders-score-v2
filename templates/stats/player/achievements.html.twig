@@ -1,0 +1,83 @@
+
+<div class="box" id="player-achievements-list">
+    <div class="box-header">
+        <h3 class="box-title">{{ player.getName() }} Achievent Stats</h3>
+    </div>
+    <div class="box-body">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Filter by Color</h3>
+            </div>
+            <div class="box-body">
+                {% for color in colors %}
+                    <div class="col-lg-3">
+                        <input type="checkbox" class="color-filter" value="{{ color.getId() }}" id="color-{{ color.getId()}}" checked="checked" />
+                        <label for="color-{{ color.getId()}}">{{ color.getName()}}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Filter by Group</h3>
+            </div>
+            <div class="box-body">
+                {% for group in groups %}
+                    <div class="col-lg-3">
+                        <input type="checkbox" class="group-filter" value="{{ group.getId() }}" id="group-{{ group.getId()}}" checked="checked" />
+                        <label for="group-{{ group.getId()}}">{{ group.getName()}}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Filter by Status</h3>
+            </div>
+            <div class="box-body">
+                <div class="col-lg-3">
+                    <input type="checkbox" class="achieved-filter" value="1" id="achieved-1" checked="checked" />
+                    <label for="achieved-1">Achieved</label>
+                </div>
+                <div class="col-lg-3">
+                    <input type="checkbox" class="achieved-filter" value="0" id="achieved-0" checked="checked" />
+                    <label for="achieved-0">Not Achieved</label>
+                </div>
+            </div>
+        </div>
+        {% for achievement in achievements %}
+            <div class="col-lg-4 achievement-box" data-color="{{ achievement.color_id }}"
+                 data-achieved="{{ achievement.achieved }}"
+                 data-group="{{ achievement.group_id }}">
+                <div class="small-box bg-achievement-{{ achievement.color }}">
+                    <div class="inner">
+                        <h3 title="{{ achievement.description }}">{{ achievement.name }}</h3>
+                        {% if achievement.progress is not null %}
+                            <p>{{ achievement.progress.getDone() }} / {{ achievement.progress.getNeeded() }}</p>
+                        <div class="progress progress-xs" title="{{ achievement.progress.getPercentage(0) }}%">
+                            <div class="progress-bar" style="width: {{ achievement.progress.getPercentage(0) }}%"></div>
+                        </div>
+                        {% endif %}
+                        <p>{{ achievement.description }}</p>
+                    </div>
+                    <div class="icon">
+                        {% if achievement.achieved %}
+                            <i class="fa fa-check-square-o"></i>
+                        {% else %}
+                            <i class="fa fa-times"></i>
+                        {% endif %}
+                    </div>
+                    <a href="{{ url('achievement/view', {id:achievement.id}) }}" class="small-box-footer">
+                        More info <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<script type="text/javascript" src="{{ asset('7w/achievement.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#player-achievements-list').achievement();
+    })
+</script>

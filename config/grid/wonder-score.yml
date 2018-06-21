@@ -1,0 +1,6 @@
+options:
+  emptyMessage: No games played so far with this wonder
+  id: score
+  title: Wonder Scores
+columns:
+  _class: App\Grid\Provider\Game

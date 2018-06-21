@@ -1,0 +1,39 @@
+options:
+  emptyMessage: There are no achievements.
+  id: achievement
+  title: Achievement
+columns:
+  id:
+    type: integer
+    index: getId
+    label: Id
+    defaultSort: true
+  name:
+    type: text
+    index: getName
+    label: Name
+  achieved:
+    type: integer
+    index: getPlayerAchievements.count
+    label: Achieved
+  colorName:
+    type: text
+    index: getAchievementColor.getName
+    label: Color
+  groupName:
+    type: text
+    index: getGroup.getName
+    label: Group
+
+  description:
+    type: text
+    index: getDescription
+    label: Description
+  view:
+    type: link
+    index: getId
+    label: View
+    url: 'achievement/view'
+    sortable: false
+    params:
+      id: getId
