@@ -1,0 +1,27 @@
+options:
+  emptyMessage: There are no saved reports.
+  id: reports
+  title: Reports
+columns:
+  id:
+    type: integer
+    index: getId
+    label: Id
+    defaultSort: true
+    defaultSortDir: DESC
+  name:
+    type: text
+    index: getName
+    label: Name
+  view:
+    type: link
+    index: getId
+    label: View
+    url: 'report/general'
+    sortable: false
+    params:
+      report_id: getId
+buttons:
+  new:
+    label: Custom report
+    url: 'report/general'

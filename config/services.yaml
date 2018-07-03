@@ -29,6 +29,9 @@ services:
     App\Grid\Provider\Game:
       public: true
 
+    FL\QBJSParser\Serializer\JsonDeserializer:
+      public: true
+
 
     App\Achievement\Calculator\General\Played\Rookie:
       tags: ['achievement.calculator']

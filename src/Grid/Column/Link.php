@@ -62,18 +62,6 @@ class Link extends Column
         $getParams = [];
         foreach ($this->getParams() as $name => $index) {
             $getParams[$name] = $this->getRowValue($row, $index, null);
-//            if (is_array($row)) {
-//                if (isset($row[$index])) {
-//                    $getParams[$name] = $row[$index];
-//                }
-//            } elseif (is_object($row)) {
-//                $method = $index;
-//                if (method_exists($row, $method)) {
-//                    $getParams[$name] = $row->$method();
-//                }
-//            } else {
-//                throw new \Exception("Row must be object or array");
-//            }
         }
         $getParams = array_merge($getParams, $this->getUrlParams());
         $url = $this->getUrlGenerator()->generate($this->getUrl(), $getParams);

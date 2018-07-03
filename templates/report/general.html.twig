@@ -1,0 +1,127 @@
+{% extends "default.html.twig" %}
+{% block head %}
+    <link rel="stylesheet" href="{{ asset('querybuilder/css/query-builder.default.css') }}" />
+{% endblock %}
+{% block content %}
+    <form method="get" action="" id="reports-form">
+        <div class="box ">
+            <div class="box-header">
+                <h3 class="box-title">Show in report</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                {% for group in fields %}
+                    <div class="col-lg-2">
+                        <div class="box ">
+                            {% if (group.fields|length > 1) %}
+                            <div class="box-header">
+                                <h3 class="box-title">
+                                    <input type="checkbox" class="group-checkbox" id="group-{{ group.code}}"/>
+                                    <label for="group-{{ group.code}}">{{ group.label }}</label>
+                                </h3>
+                            </div>
+                            {% endif %}
+                            <div class="box-body">
+                                {% for field in group.fields %}
+                                    <div class="col-lg-12">
+                                        <input name="columns[]" type="checkbox" class="field-checkbox" value="{{ field.id}}" id="field-{{ field.id }}" {% if field.id in selected %} checked="checked" {% endif %} />
+                                        <label for="field-{{ field.id }}">{{ field.long_label}}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="rules" id="rules">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Filter By</h3>
+            </div>
+            <div class="box-body">
+                <div id="report-container"></div>
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Submit {%  if actions|length > 0 %} and save {% endif %}</h3>
+            </div>
+            <div class="box-body">
+                {%  if actions|length > 0 %}
+                    <input type="hidden" name="current_report_id" value="{{ current_report_id }}" />
+                    <div class="form-group">
+                        <label for="save-report">Action</label>
+                        <select name="save" id="save-report">
+                            {% for value, label in actions %}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group" id="name-container" style="display: none;">
+                        <label for="name" class="form-control-label required">Report Name</label>
+                        <input id="name" name="name" required="required" class="form-control" type="text" value="{{ current_report_name }}" />
+                    </div>
+                {% endif %}
+                <button type="button" class="btn btn-info" id="submitRules">Submit</button>
+            </div>
+        </div>
+
+    </form>
+    {{ grid|raw }}
+{% endblock %}
+{% block footer %}
+    <script type="text/javascript" src="{{ asset('7w/select-all.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('7w/dot.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('7w/extendext.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('querybuilder/js/query-builder.js') }}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $('#report-fields').select2().selectAll();
+//            $('#report-fields');
+            var rulesElement = $('#report-container').queryBuilder({{ config|raw }});
+            $('#submitRules').on('click', function () {
+                if ($(rulesElement).queryBuilder('validate')) {
+                    $('#rules').val(JSON.stringify($(rulesElement).queryBuilder('getRules')));
+                    $('#reports-form').submit();
+                }
+            });
+            $('.group-checkbox').on('click', function() {
+                $(this).parent().parent().parent().find('.box-body input[type=checkbox]').prop('checked', $(this).prop('checked'));
+            });
+            $('.field-checkbox').on('click', function () {
+                checkAllChecked(this);
+            });
+            function checkAllChecked(checkbox) {
+                var container = $(checkbox).parent().parent();
+                var allChecked = true;
+                $(container).find('.field-checkbox').each(function(obj) {
+                    if (!$(this).prop('checked')) {
+                        allChecked = false;
+                    }
+                });
+                $(container).parent().find('.group-checkbox').prop('checked', allChecked);
+            }
+            $('.box-body').each(function(){
+                $(this).find('.field-checkbox:first').each(function() {
+                    checkAllChecked(this);
+                })
+            });
+            {%  if actions|length > 0  %}
+            function checkNameVisibility() {
+                if ($('#save-report').val() > 0) {
+                    $('#name-container').show();
+                    $('#reports-form').attr('method', 'post').attr('action', '{{ url('report/save') }}');
+                } else {
+                    $('#name-container').hide();
+                    $('#reports-form').attr('method', 'get').attr('action', '');
+                }
+            }
+            $('#save-report').on('change', function() {
+                checkNameVisibility();
+            });
+            {% endif %}
+        });
+    </script>
+{% endblock %}

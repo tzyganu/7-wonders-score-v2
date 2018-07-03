@@ -40,7 +40,7 @@ class Score
      */
     private $game;
     /**
-     * @var int
+     * @var Player
      * @ManyToOne(targetEntity="Player", fetch="LAZY", inversedBy="scores", cascade={"persist"})
      * @ORM\JoinColumn(
      *      name="player_id",
@@ -51,7 +51,7 @@ class Score
      */
     private $player;
     /**
-     * @var int
+     * @var Wonder
      * @ManyToOne(targetEntity="Wonder", fetch="LAZY",cascade={"persist"}, inversedBy="scores")
      * @ORM\JoinColumn(
      *      name="wonder_id",
@@ -704,5 +704,10 @@ class Score
     public function getPlayerInfo()
     {
         return $this->getPlayer()->getName().' - '.$this->getWonder()->getName().': '.$this->getSide();
+    }
+
+    public function getPlayedOn()
+    {
+        return $this->getGame()->getPlayedOn();
     }
 }
