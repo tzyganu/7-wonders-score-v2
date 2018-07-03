@@ -16,7 +16,7 @@ class Hedgehog implements CalculatorInterface
      */
     public function validate(Score $score)
     {
-        return $this->getShieldCount($score->getPlayer()) >- static::SHIELD_LIMIT;
+        return $this->getShieldCount($score->getPlayer()) > static::SHIELD_LIMIT;
     }
 
     /**
@@ -27,7 +27,7 @@ class Hedgehog implements CalculatorInterface
     {
         $count = 0;
         foreach ($player->getScores() as $score) {
-            $count += $score->getMilitaryShield();
+            $count += (int)$score->getMilitaryShield();
         }
         return $count;
     }
