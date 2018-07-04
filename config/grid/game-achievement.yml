@@ -17,6 +17,10 @@ columns:
     url: 'achievement/view'
     params:
       id: getAchievement.getId
+  description:
+    type: text
+    index: getAchievement.getDescription
+    label: Description
   color:
     type: text
     index: getAchievement.getAchievementColor.getName

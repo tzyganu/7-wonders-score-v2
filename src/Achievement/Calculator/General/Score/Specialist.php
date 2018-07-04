@@ -52,6 +52,9 @@ class Specialist implements CalculatorInterface
     {
         $max = 0;
         foreach ($player->getScores() as $score) {
+            if ($score->getRank() != 1) {
+                continue;
+            }
             $zeroScores = $this->getZeroScores($score);
             if ($zeroScores > $max) {
                 $max = $zeroScores;
