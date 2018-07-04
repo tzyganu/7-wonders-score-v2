@@ -73,8 +73,6 @@ class View extends AbstractController
         $tab = new Tab('Scores', $grid->render());
         $tabContainer->addTab('score-tab', $tab);
 
-//        $achievementsGrid = $this->gridLoader->loadGrid('player-achievement');
-//        $achievementsGrid->setRows($instance->getPlayerAchievements());
         $tab = new Tab('Achievements', $this->playerAchievementBlock->render($instance));
         $tabContainer->addTab('achievement-tab', $tab);
         return $this->render(
