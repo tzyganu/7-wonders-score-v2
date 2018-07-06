@@ -38,6 +38,9 @@ class Specialist implements CalculatorInterface
      */
     public function validate(Score $score)
     {
+        if ($score->getRank() != 1) {
+            return false;
+        }
         return $this->compareZeroScores($this->getZeroScores($score));
     }
 
@@ -49,6 +52,9 @@ class Specialist implements CalculatorInterface
     {
         $max = 0;
         foreach ($player->getScores() as $score) {
+            if ($score->getRank() != 1) {
+                continue;
+            }
             $zeroScores = $this->getZeroScores($score);
             if ($zeroScores > $max) {
                 $max = $zeroScores;
@@ -63,9 +69,6 @@ class Specialist implements CalculatorInterface
      */
     protected function getZeroScores(Score $score)
     {
-        if ($score->getRank() != 1) {
-            return false;
-        }
         $categories = $this->getCategories();
         $zeroScores = 0;
         foreach($categories as $category) {

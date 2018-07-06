@@ -148,9 +148,6 @@ class Save extends AbstractController
             }
             $this->getDoctrine()->getManager()->flush();
         }
-        //TODO: redirect to game view
-        return $this->redirectToRoute(
-            'game/new'
-        );
+        return $this->redirectToRoute('game/view', ['id' => $game->getId()]);
     }
 }
