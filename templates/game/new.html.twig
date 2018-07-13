@@ -117,7 +117,8 @@
             $('#player-table').game({
                 'template' : rowTemplate,
                 'wondersConfig': {{ wondersConfig|raw }},
-                'addPlayerTrigger': '.add-player'
+                'addPlayerTrigger': '.add-player',
+                'defaultPlayers': {{ playerCount }}
             });
         });
     </script>

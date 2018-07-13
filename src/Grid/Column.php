@@ -97,7 +97,11 @@ abstract class Column
                     return $default;
                 }
             }
+            elseif ($value === null) {
+                return $default;
+            }
             else {
+
                 throw new \Exception("Row must be object or array");
             }
         }

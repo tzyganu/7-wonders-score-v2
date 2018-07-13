@@ -10,6 +10,8 @@ use App\Entity\Score;
 use App\Entity\Wonder;
 use App\Grid\Factory as GridFactory;
 use App\Grid\Column\Factory as ColumnFactory;
+use App\Report\ColumnsRendererFactory;
+use App\Report\Config;
 use App\Score\Columns;
 use App\Util\StringUtils;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -28,24 +30,47 @@ class General extends AbstractController
      * @var ManagerRegistry
      */
     private $managerRegistry;
-
+    /**
+     * @var Columns
+     */
     private $scoreColumns;
     /**
      * @var RequestStack
      */
     private $requestStack;
-
+    /**
+     * @var JsonDeserializer
+     */
     private $deserializer;
-
+    /**
+     * @var StringUtils
+     */
     private $stringUtils;
-
+    /**
+     * @var GridFactory
+     */
     private $gridFactory;
-
+    /**
+     * @var ColumnFactory
+     */
     private $columnFactory;
-
+    /**
+     * @var Report
+     */
     private $reportEntity;
-
+    /**
+     * @var AuthValidator
+     */
     private $authValidator;
+    /**
+     * @var Config
+     */
+    private $config;
+
+    /**
+     * @var ColumnsRendererFactory
+     */
+    private $columnsRendererFactory;
 
     /**
      * General constructor.
@@ -66,7 +91,9 @@ class General extends AbstractController
         StringUtils $stringUtils,
         GridFactory $gridFactory,
         ColumnFactory $columnFactory,
-        AuthValidator $authValidator
+        AuthValidator $authValidator,
+        ColumnsRendererFactory $columnsRendererFactory,
+        Config $config
     ) {
         $this->managerRegistry = $managerRegistry;
         $this->scoreColumns = $scoreColumns;
@@ -76,6 +103,8 @@ class General extends AbstractController
         $this->gridFactory = $gridFactory;
         $this->columnFactory = $columnFactory;
         $this->authValidator = $authValidator;
+        $this->columnsRendererFactory = $columnsRendererFactory;
+        $this->config = $config;
     }
 
     /**
@@ -86,34 +115,69 @@ class General extends AbstractController
     {
 
         $decodedRules = [];
-        $config = $this->getConfig();
+        $config = [
+            'filters' => $this->config->getFilterConfig()->getFilters(),
+            'rules' => $this->config->getParserConfig()->getDefaultRules(false)
+        ];
         $gridHtml = '';
         $columns = [];
-
         $rules = $this->getRules();
         if ($rules) {
             $realDecodedRules = json_decode($rules, true);
             $decodedRules = $this->deserializer->deserialize($rules);
             unset($realDecodedRules['valid']);
             $parser = new DoctrineParser(
-                Score::class,
-                $this->getFieldsToProperties(),
-                [
-                    'game' => Game::class,
-                    'player' => Player::class,
-                    'wonder' => Wonder::class
-                ]
+                $this->config->getParserConfig()->getClassName(),
+                $this->config->getParserConfig()->getFieldsToProperties(),
+                $this->config->getParserConfig()->getFieldPrefixesToClasses()
             );
             $parsed = $parser->parse($decodedRules);
+            $columns = $this->getColumns();
+
+            if (!$this->isPlainMode($columns)) {
+                $firstOne = true;
+                $index = 1;
+                $aggregations = $this->getAggregations();
+                foreach ($columns as $agg => $columnList) {
+                    if (!isset($aggregations[$agg])) {
+                        continue;
+                    }
+                    if (!$aggregations[$agg]['agg']) {
+                        continue;
+                    }
+                    $func = $aggregations[$agg]['function'];
+                    foreach ($columnList as $column) {
+                        $replace = ($firstOne) ? 'SELECT '.$this->config->getParserConfig()->getAllObjects() : 'SELECT ';
+                        $replaceWith = 'SELECT '.$func.'(object.' . $this->stringUtils->camelize($column) . ')';
+                        $replaceWith .= ' as '.strtoupper($func).'_' . $this->stringUtils->camelize($column);
+                        if (!$firstOne) {
+                            $replaceWith .= ',';
+                        }
+                        $parsed = $parsed->copyWithReplacedString($replace, $replaceWith, false);
+                        $firstOne = false;
+                        $index++;
+                    }
+                }
+                $groupByFields = $columns['p'];
+                $selectString = $this->config->getParserConfig()->getSelectString($groupByFields);
+                $groupByString = $this->config->getParserConfig()->getGroupByString($groupByFields);
+                $parsed = $parsed->copyWithReplacedString('SELECT', 'SELECT '.$selectString.',', false);
+                $parsed = $parsed->copyWithReplacedString('GROUP BY ', 'GROUP BY '.$groupByString, 'GROUP BY '.$groupByString);
+            }
             $sql = $parsed->getQueryString();
+
+//            echo $sql;exit;
             $config['rules'] = $realDecodedRules;
             $em = $this->managerRegistry->getManager();
+            /** @var \Doctrine\ORM\Query $query */
             $query = $em->createQuery($sql);
+            //add columns
             $query->setParameters($parsed->getParameters());
-            $result = $query->getArrayResult();
+//            echo $query->getSQL();exit;
             $columns = $this->getColumns();
             $grid = $this->getGrid($columns);
-            $grid->setRows($query->getResult());
+//            echo "<pre>"; print_r($query->getArrayResult());exit;
+            $grid->setRows($query->getArrayResult());
             $gridHtml = $grid->render();
         }
         $report = $this->getReportEntity();
@@ -127,8 +191,71 @@ class General extends AbstractController
                 'actions' => $this->getActions(),
                 'current_report_id' => ($report) ? $report->getId() : '',
                 'current_report_name' => ($report) ? $report->getName() : '',
+                'aggregations' => $this->getAggregations(),
+                'fieldsHtml' => [
+                    $this->getPlayerColumnsHtml($columns),
+                    $this->getScoreColumnsHtml($columns)
+                ]
             ]
         );
+    }
+
+    private function isPlainMode($columns)
+    {
+        foreach ($this->getAggregations() as $code => $settings) {
+            if ($settings['agg']) {
+                $requestKey = $settings['name'];
+                if (isset($columns[$requestKey])) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private function getPlayerColumnsHtml($selected)
+    {
+        $columns = $this->getSelectFields()[0];
+        $columnsRenderer = $this->columnsRendererFactory->create(
+            [$columns],
+            $selected,
+            [],
+            [
+                'values' => [
+                    'label' => 'Values',
+                    'function' => '',
+                    'name' => Config\Aggregate::PLAYER_AGG_KEY
+                ]
+            ],
+            '',
+            'If you select aggregated values from the grid below, the selected fields in here will be added to the "Group By"'
+        );
+        return $columnsRenderer->render();
+    }
+
+    private function getScoreColumnsHtml($selected)
+    {
+        $allColumns = $this->getSelectFields();
+        unset($allColumns[0]);
+        $isPlainMode = $this->isPlainMode($selected);
+        $columnsRenderer = $this->columnsRendererFactory->create(
+            $allColumns,
+            $selected,
+            [
+                0 => [
+                    'label' => 'Values',
+                    'fields' => ['values'],
+                    'selected' => $isPlainMode
+                ],
+                1 => [
+                    'label' => 'Aggregates',
+                    'fields' => ['avg', 'min', 'max', 'sum'],
+                    'selected' => !$isPlainMode
+                ]
+            ],
+            $this->getAggregations()
+        );
+        return $columnsRenderer->render();
     }
 
     /**
@@ -151,7 +278,7 @@ class General extends AbstractController
 
     private function getColumns()
     {
-        $columns = $this->requestStack->getCurrentRequest()->get('columns');
+        $columns = $this->requestStack->getCurrentRequest()->get('c');
         if ($columns) {
             return $columns;
         }
@@ -173,154 +300,6 @@ class General extends AbstractController
             return $report->getRules();
         }
         return null;
-    }
-
-    private function getConfig()
-    {
-        $filters = [
-            [
-                'id' =>  'game.playedOn',
-                'label' => 'Game Date',
-                'name' =>  'game.playedOn',
-                'input' =>  'text',
-                'type' => 'date',
-                'plugin' => 'datepicker',
-                'plugin_config' => [
-                    'dateFormat' =>'yy-mm-dd'
-                ],
-                'operators' => ['equal','between']
-            ],
-            [
-                'id' =>  'game.leaders',
-                'label' => 'Game Played with Leaders',
-                'name' =>  'game.leaders',
-                'type' => 'integer',
-                'input' => 'radio',
-                'values' => [
-                    1 => 'Yes',
-                    0 => 'No'
-                ],
-                'operators' => ['equal']
-            ],
-            [
-                'id' =>  'game.cities',
-                'label' => 'Game Played with Cities',
-                'name' =>  'game.cities',
-                'type' => 'integer',
-                'input' => 'radio',
-                'values' => [
-                    1 => 'Yes',
-                    0 => 'No'
-                ],
-                'operators' => ['equal']
-            ],
-            [
-                'id' =>  'playerCount',
-                'label' => 'Player Count',
-                'name' =>  'score.playerCount',
-                'type' => 'integer',
-                'input' =>  'text',
-                'operators' => ['equal','not_equal', 'in', 'not_in', 'less', 'less_or_equal', 'greater',
-                    'greater_or_equal', 'between', 'not_between'],
-            ],
-            [
-                'id' =>  'player',
-                'label' => 'Player',
-                'name' =>  'score.player',
-                'input' =>  'select',
-                'multiple' => true,
-                'operators' => ['in','not_in'],
-                'plugin' => 'select2',
-                'values' => $this->getPlayers()
-            ],
-            [
-                'id' =>  'wonder',
-                'label' => 'Wonder',
-                'name' =>  'score.wonder',
-                'input' =>  'select',
-                'multiple' => true,
-                'operators' => ['in','not_in'],
-                'plugin' => 'select2',
-                'values' => $this->getWonders()
-            ],
-            [
-                'id' =>  'side',
-                'label' => 'Side',
-                'name' =>  'score.side',
-                'input' =>  'select',
-                'multiple' => true,
-                'operators' => ['in','not_in'],
-                'plugin' => 'select2',
-                'values' => ['A' => 'A', 'B' => 'B']
-            ],
-            [
-                'id' =>  'rank',
-                'label' => 'Rank',
-                'name' =>  'score.rank',
-                'input' =>  'text',
-                'type' => 'integer',
-                'operators' => ['equal','not_equal', 'in', 'not_in', 'less', 'less_or_equal', 'greater',
-                    'greater_or_equal', 'between', 'not_between', 'is_null', 'is_not_null'],
-            ]
-        ];
-        foreach ($this->scoreColumns->getColumns() as $key => $column) {
-            $filters[] = [
-                'id' =>  $key,
-                'label' => $column['long_label'],
-                'name' =>  'score.'.$key,
-                'type' => 'integer',
-                'input' =>  'text',
-                'operators' => ['equal','not_equal', 'in', 'not_in', 'less', 'less_or_equal', 'greater',
-                    'greater_or_equal', 'between', 'not_between', 'is_null', 'is_not_null']
-            ];
-        }
-        return ['filters' => $filters];
-    }
-
-    private function getFieldsToProperties()
-    {
-        $props = [
-            'side' => 'side',
-            'player' => 'player',
-            'wonder' => 'wonder',
-            'playerCount' => 'playerCount',
-            'game.playedOn' => 'game.playedOn',
-            'game.leaders' => 'game.leaders',
-            'game.cities' => 'game.cities',
-            'rank' => 'rank'
-        ];
-        foreach ($this->scoreColumns->getColumns() as $key => $column) {
-            $props[$key] = $this->stringUtils->camelize($key);
-        }
-        return $props;
-    }
-
-    /**
-     * @return array
-     */
-    private function getPlayers()
-    {
-        /** @var Player[] $players */
-        $players = $this->managerRegistry->getRepository(Player::class)->findAll();
-        $return = [];
-        foreach ($players as $player) {
-            $return[$player->getId()] = $player->getName();
-        }
-        return $return;
-    }
-
-    /**
-     * @return array
-     */
-    private function getWonders()
-    {
-        /** @var Wonder[] $wonders */
-        $wonders = $this->managerRegistry->getRepository(Wonder::class)->findAll();
-        $return = [];
-        foreach ($wonders as $wonder) {
-            $return[$wonder->getId()] = $wonder->getName();
-        }
-        return $return;
     }
 
     private function getFlatSelectedFields()
@@ -354,103 +333,13 @@ class General extends AbstractController
 
     private function getSelectFields()
     {
-        $categories = $this->getCategoriesByKey();
-        $selectFields = [
-            [
-                'label' => 'Player',
-                'code' => 'player',
-                'fields' => [
-                    'player' => [
-                        'id' => 'player',
-                        'long_label' => 'Player',
-                        'label' => 'Player',
-                        'type' => 'link',
-                        'iconClass' => '',
-                        'labelKey' => 'getPlayer.getName',
-                        'url' => 'player/view',
-                        'params' => [
-                            'id' => 'getPlayer.getId'
-                        ]
-                    ],
-                    'wonder' => [
-                        'id' => 'wonder',
-                        'long_label' => 'Wonder',
-                        'label' => 'Wonder',
-                        'type' => 'link',
-                        'iconClass' => '',
-                        'labelKey' => 'getWonder.getName',
-                        'url' => 'wonder/view',
-                        'params' => [
-                            'id' => 'getWonder.getId'
-                        ]
-                    ],
-                    'side' => [
-                        'id' => 'side',
-                        'long_label' => 'Side',
-                        'label' => 'Side',
-                        'type' => 'text',
-                        'iconClass' => '',
-                        'index' => 'getSide'
-                    ],
-                    'rank' => [
-                        'id' => 'rank',
-                        'long_label' => 'Rank',
-                        'label' => 'Rank',
-                        'type' => 'integer',
-                        'iconClass' => '',
-                        'index' => 'getRank'
-                    ],
-                    'playerCount' => [
-                        'id' => 'playerCount',
-                        'long_label' => '# Players',
-                        'label' => '#',
-                        'type' => 'integer',
-                        'iconClass' => '',
-                        'index' => 'getPlayerCount'
-                    ]
-                ]
-            ],
-        ];
-
-        foreach ($categories as $code => $category) {
-            $group = [
-                'label' => $category->getName(),
-                'code' => $category->getCode()
-            ];
-            $fields = [];
-            foreach ($this->scoreColumns->getCategoryColumns($code) as $key => $column) {
-                $fields[$key] = [
-                    'id' => $key,
-                    'long_label' => $column['long_label'],
-                    'label' => $column['grid_label'],
-                    'type' => 'integer',
-                    'iconClass' => isset($categories[$column['category']])
-                        ? $category->getIconClass()
-                        : '',
-                    'index' => $this->stringUtils->camelize('get_'.$key)
-                ];
-            }
-            $group['fields'] = $fields;
-            $selectFields[] = $group;
-        }
-        $selectFields[] = [
-            'label' => 'Total Score',
-            'code' => 'total',
-            'fields' => [
-                'total' => [
-                    'id' => 'total',
-                    'long_label' => 'Total score',
-                    'label' => '+',
-                    'type' => 'integer',
-                    'iconClass' => '',
-                    'index' => "getTotalScore"
-                ]
-            ]
-        ];
-
-        return $selectFields;
+        return $this->config->getFieldsConfig()->getFields();
     }
 
+    /**
+     * @param $fields
+     * @return \App\Grid
+     */
     private function getGrid($fields)
     {
         $grid = $this->gridFactory->create([
@@ -460,27 +349,32 @@ class General extends AbstractController
         ]);
 
         $selectFields = $this->getFlatSelectedFields();
-        foreach ($fields as $field) {
-            if (isset($selectFields[$field])) {
-                $column = $this->columnFactory->create($selectFields[$field]);
-                $grid->addColumn($field, $column);
+        $isPlainMode = $this->isPlainMode($this->getColumns());
+        $aggNames = array_keys($fields);
+        if ($this->config->getAggregateConfig()->canAddCount($aggNames)) {
+            $column = $this->columnFactory->create(['type' => 'integer', 'index' => 'count', 'label' => 'Count']);
+            $grid->addColumn('count', $column);
+        }
+        foreach ($fields as $agg => $section) {
+            $usedAgg = ($agg == Config\Aggregate::PLAYER_AGG_KEY) ? Config\Aggregate::VALUES_KEY: $agg;
+            foreach ($section as $field) {
+                if (isset($selectFields[$field])) {
+                    $column = $this->columnFactory->create(
+                        $this->config->getAggregateConfig()->transformColumnSettings($selectFields[$field], $usedAgg, $isPlainMode)
+                    );
+                    $grid->addColumn($usedAgg.$field, $column);
+                }
             }
         }
-
+        //exit;
         return $grid;
     }
 
     /**
-     * @return Category[]
+     * @return array
      */
-    private function getCategoriesByKey()
+    private function getAggregations()
     {
-        $categories = $this->managerRegistry->getRepository(Category::class)->findAll();
-        $byKey = [];
-        foreach ($categories as $category) {
-            /** @var Category $category */
-            $byKey[$category->getCode()] = $category;
-        }
-        return $byKey;
+        return $this->config->getAggregateConfig()->getAggregates();
     }
 }

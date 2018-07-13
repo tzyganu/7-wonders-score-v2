@@ -57,8 +57,17 @@ ul.alert {
 }
 
 .score-form .form-group {
-    width: inherit;
+    width: 80%;
 }
 #report-container .select2-container {
     min-width: 400px;
+}
+label.game-player {
+    display:block!important;
+}
+.score-form .select2-container {
+    width: 100%!important;
+}
+.score-form td.player {
+    width:120px;
 }

@@ -23,6 +23,11 @@ military_minus_one:
   label: -1
   grid_label: -1
   category: military
+military_shield:
+  long_label: "Military Shields"
+  label: Shields
+  grid_label: '<span class="fa fa-shield"></span>'
+  category: military
 cash_score:
   long_label: "Cash score"
   label: "Cash"

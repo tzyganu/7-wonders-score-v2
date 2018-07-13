@@ -1,0 +1,25 @@
+className: \App\Entity\Score
+fieldsToProperties:
+  - side
+  - leftSide
+  - rightSide
+  - player
+  - leftPlayer
+  - rightPlayer
+  - wonder
+  - leftWonder
+  - rightWonder
+  - playerCount
+  - game.playedOn
+  - game.leaders
+  - game.cities
+  - game.id
+  - rank
+fieldPrefixesToClasses:
+  game: App\Entity\Game
+  player: App\Entity\Player
+  wonder: App\Entity\Wonder
+  leftPlayer: App\Entity\Player
+  rightPlayer: App\Entity\Player
+  leftWonder: App\Entity\Wonder
+  rightWonder: App\Entity\Wonder

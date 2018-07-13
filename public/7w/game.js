@@ -78,7 +78,7 @@ $.widget('wonders.game', {
             self.checkExtensions();
         });
         this.attachValidation();
-        // this.automateGame();
+        this.automateGame();
     },
 
     attachValidation: function() {
@@ -158,36 +158,16 @@ $.widget('wonders.game', {
      * fills in the form and submits it.
      */
     automateGame: function () {
-        function setCookie(name,value,days) {
-            var expires = "";
-            if (days) {
-                var date = new Date();
-                date.setTime(date.getTime() + (days*24*60*60*1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-        }
-        function getCookie(name) {
-            var nameEQ = name + "=";
-            var ca = document.cookie.split(';');
-            for(var i=0;i < ca.length;i++) {
-                var c = ca[i];
-                while (c.charAt(0)==' ') c = c.substring(1,c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-            }
-            return null;
-        }
         var alreadyPlayed = localStorage.autoPlay;
         if (!alreadyPlayed) {
             alreadyPlayed = 0;
         }
         console.log(alreadyPlayed);
-        var cookieName = 'autoPlayedGames';
         var maxValue = 100;
         if (alreadyPlayed >= maxValue) {
             alert('played enough');
         } else {
-            var playerCount = Math.random() * 5;
+            var playerCount = Math.random() * 5 - this.options.defaultPlayers + 3;
             for (var i = 0; i<playerCount; i++) {
                 this.addPlayer();
             }
@@ -215,9 +195,9 @@ $.widget('wonders.game', {
                 }
             );
             $('.js-datepicker').val('2018-0' + Math.floor(Math.random() * (10)) + '-' + Math.floor(Math.random() * (18) + 10));
-            $('#form_game_cities, #form_game_leaders').each(function () {
+            $('#form_game_cities, #form_game_leaders, #form_game_playLeft').each(function () {
                 var r = Math.floor(Math.random() * (2));
-                $(this).prop('checked', (r == 1))
+                $(this).prop('checked', (r == 1));
                 $(this).trigger('change');
             });
             this.shufflePlayers();
@@ -355,15 +335,6 @@ $.widget('wonders.player', {
             that.calculateTotal();
         });
         $(this.element).find('select').select2();
-        $(this.element).find('.player-select').on('change', function () {
-            if ($(this).val()) {
-                $(that.element).find('.new-player').parent().hide();
-                // $(that.element).find('.new-player').removeAttr('required');
-            } else {
-                $(that.element).find('.new-player').parent().show();
-                // $(that.element).find('.new-player').attr('required', 'required');
-            }
-        });
         $(this.element).find('label').each(function(){
             var icon = $(this).attr('data-icon');
             if (icon) {

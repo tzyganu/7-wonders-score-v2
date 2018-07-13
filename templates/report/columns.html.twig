@@ -1,0 +1,80 @@
+<div id="{{ object.getContainerId() }}">
+    <table class="table table-bordered" style="overflow: scroll">
+        <tr>
+            {% if object.getAggregations()|length > 1 %}
+                <td>
+                    {% if object.getDependencyMap()|length %}
+                        <select class="dependency-map">
+                            {% for val, settings in  object.getDependencyMap() %}
+                                <option value="{{ val }}" {% if settings.selected %} selected="selected" {% endif %}>{{ settings.label }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+                </td>
+            {% endif %}
+            {% for group in object.getFields() %}
+                <th colspan="{{ group.fields|length }}" class="text-center">
+                    <input type="checkbox" class="filter-group-{{ group.code }}" id="{{ object.getContainerId() }}-group-{{ group.code }}" data-group="{{ group.code }}"/>
+                    <label for="{{ object.getContainerId() }}-group-{{ group.code }}">{{ group.label }}</label>
+                </th>
+            {% endfor %}
+        </tr>
+        {% for agg, settings in object.getAggregations() %}
+            <tr data-row-agg="{{ agg }}" data-is-agg="true">
+                {% if object.getAggregations()|length > 1 %}
+                    <td>
+                        <label>{{ settings.label }}</label>
+                        <div class="row">
+                            <div class="col-lg-6" style="white-space: nowrap;">
+                                <label for="{{ object.getContainerId() }}-{{ agg }}-enable">Enable</label>
+                                <input type="checkbox" data-enabler="true"
+                                       class="{{ object.getContainerId() }}-{{ agg }}-enable"
+                                       id="{{ object.getContainerId() }}-{{ agg }}-enable" />
+                            </div>
+                            <div class="col-lg-6" style="white-space: nowrap;">
+                                <label for="{{ object.getContainerId() }}-{{ agg }}-select-all">Select All</label>
+                                <input type="checkbox" data-row-selector="true"
+                                       class="{{ object.getContainerId() }}-{{ agg }}-select-all"
+                                       id="{{ object.getContainerId() }}-{{ agg }}-select-all" />
+                            </div>
+                        </div>
+                    </td>
+                {% endif %}
+                {% for group in object.getFields() %}
+                    {% for field in group.fields %}
+                        <th>
+                            <input name="c[{{ settings.name }}][]" type="checkbox"
+                                   data-group-parent="{{ group.code }}"
+                                   data-agg-type="{{ settings.name }}"
+                                   data-row-checkbox="true"
+                                   value="{{ field.id }}"
+                                   id="{{ agg }}-{{ field.id }}"
+                                   title="{{ field.long_label }}"
+                                   {% if object.isSelected(field.id, settings.name) %} checked="checked" {% endif %}
+                            />
+                            <label for="{{ agg }}-{{ field.id }}">
+                            {% if field.iconClass is iterable %}
+                                {% for class in field.iconClass %}
+                                <span class="{{ class }}" title="{{ field.long_label }}"></span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="{{ field.iconClass }}" title="{{ field.long_label }}"></span>
+                            {% endif %}
+                                {{ field.label|raw}}
+                            </label>
+                        </th>
+                    {% endfor %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+    {% if object.getComment() %}
+        <p>{{ object.getComment() }}</p>
+    {% endif %}
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        $('#{{ object.getContainerId() }}').reportUi({{ object.getUiConfig()|raw }})
+    });
+</script>
+

@@ -93,15 +93,12 @@ class Save extends AbstractController
         $game->setPlayLeft(isset($postData['game']['playLeft']));
         $game->setCanExclude(isset($postData['game']['playLeft']));
         $game->setUser($this->authValidator->getUser());
+        /** @var Score[] $scoresByPosition */
+        $scoresByPosition = [];
         unset($postData['game']);
         foreach ($postData as $playerData) {
-            if (!isset($playerData['player']['player_id'])) {
-                $player = new Player();
-                $player->setName($playerData['player']['name']);
-                $player->setActive(1);
-            } else {
-                $player = $this->managerRegistry->getRepository(Player::class)->find($playerData['player']['player_id']);
-            }
+            /** @var Player $player */
+            $player = $this->managerRegistry->getRepository(Player::class)->find($playerData['player']['player_id']);
             $score = new Score();
             $score->setPlayer($player);
             /** @var Wonder $wonder */
@@ -132,11 +129,30 @@ class Save extends AbstractController
                 }
             }
             $score->setTotalScore($totalScore);
-            $score->setPosition($position++);
+            $score->setPosition($position);
+            $scoresByPosition[$position] = $score;
+            $position++;
             $game->addScore($score);
         }
+        $playerCount = count($game->getScores());
         $this->ranker->rankScores($game);
-        $game->setPlayerCount(count($game->getScores()));
+        $game->setPlayerCount(count($playerCount));
+        //attach lef-right to scores
+        $playLeft = $game->getPlayLeft();
+        foreach ($scoresByPosition as $position => $score) {
+            $leftPosition = (($score->getPosition() - 1  + $playerCount +  (($playLeft) ? 1 : -1)) % $playerCount) + 1;
+            $rightPosition = (($score->getPosition() - 1  + $playerCount +  (($playLeft) ? -1 : 1)) % $playerCount) + 1;
+            $leftScore = $scoresByPosition[$leftPosition];
+            $rightScore = $scoresByPosition[$rightPosition];
+            $score->setLeftPlayer($leftScore->getPlayer());
+            $score->setLeftWonder($leftScore->getWonder());
+            $score->setLeftSide($leftScore->getSide());
+            $score->setLeftRank($leftScore->getRank());
+            $score->setRightPlayer($rightScore->getPlayer());
+            $score->setRightWonder($rightScore->getWonder());
+            $score->setRightSide($rightScore->getSide());
+            $score->setRightRank($rightScore->getRank());
+        }
         $this->getDoctrine()->getManager()->persist($game);
 
         $this->getDoctrine()->getManager()->flush();
@@ -148,6 +164,7 @@ class Save extends AbstractController
             }
             $this->getDoctrine()->getManager()->flush();
         }
-        return $this->redirectToRoute('game/view', ['id' => $game->getId()]);
+//        return $this->redirectToRoute('game/view', ['id' => $game->getId()]);
+        return $this->redirectToRoute('game/new');
     }
 }
