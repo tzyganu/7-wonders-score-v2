@@ -40,7 +40,7 @@ class Score
      */
     private $game;
     /**
-     * @var int
+     * @var Player
      * @ManyToOne(targetEntity="Player", fetch="LAZY", inversedBy="scores", cascade={"persist"})
      * @ORM\JoinColumn(
      *      name="player_id",
@@ -51,7 +51,7 @@ class Score
      */
     private $player;
     /**
-     * @var int
+     * @var Wonder
      * @ManyToOne(targetEntity="Wonder", fetch="LAZY",cascade={"persist"}, inversedBy="scores")
      * @ORM\JoinColumn(
      *      name="wonder_id",
@@ -81,6 +81,16 @@ class Score
      * @ORM\Column(type="integer")
      */
     private $rank;
+    /**
+     * @var int
+     * @ORM\Column(type="integer")
+     */
+    private $leftRank;
+    /**
+     * @var int
+     * @ORM\Column(type="integer")
+     */
+    private $rightRank;
     /**
      * @var boolean
      * @ORM\Column(type="integer", length=1)
@@ -191,6 +201,61 @@ class Score
      * @ORM\Column(type="integer")
      */
     private $totalScore;
+
+    /**
+     * @var Player
+     * @ManyToOne(targetEntity="Player", fetch="LAZY")
+     * @ORM\JoinColumn(
+     *      name="left_player_id",
+     *      referencedColumnName="id",
+     *      nullable=true,
+     *      onDelete="SET NULL"
+     * )
+     */
+    private $leftPlayer;
+    /**
+     * @var Player
+     * @ManyToOne(targetEntity="Player", fetch="LAZY")
+     * @ORM\JoinColumn(
+     *      name="right_player_id",
+     *      referencedColumnName="id",
+     *      nullable=true,
+     *      onDelete="SET NULL"
+     * )
+     */
+    private $rightPlayer;
+    /**
+     * @var Wonder
+     * @ManyToOne(targetEntity="Wonder", fetch="LAZY")
+     * @ORM\JoinColumn(
+     *      name="left_wonder_id",
+     *      referencedColumnName="id",
+     *      nullable=true,
+     *      onDelete="SET NULL"
+     * )
+     */
+    private $leftWonder;
+    /**
+     * @var Wonder
+     * @ManyToOne(targetEntity="Wonder", fetch="LAZY")
+     * @ORM\JoinColumn(
+     *      name="right_wonder_id",
+     *      referencedColumnName="id",
+     *      nullable=true,
+     *      onDelete="SET NULL"
+     * )
+     */
+    private $rightWonder;
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=1)
+     */
+    private $leftSide;
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=1)
+     */
+    private $rightSide;
     /**
      * @var int
      * @ORM\Column(type="integer")
@@ -704,5 +769,133 @@ class Score
     public function getPlayerInfo()
     {
         return $this->getPlayer()->getName().' - '.$this->getWonder()->getName().': '.$this->getSide();
+    }
+
+    /**
+     * @return Player
+     */
+    public function getLeftPlayer()
+    {
+        return $this->leftPlayer;
+    }
+
+    /**
+     * @param Player $leftPlayer
+     */
+    public function setLeftPlayer($leftPlayer)
+    {
+        $this->leftPlayer = $leftPlayer;
+    }
+
+    /**
+     * @return Player
+     */
+    public function getRightPlayer()
+    {
+        return $this->rightPlayer;
+    }
+
+    /**
+     * @param Player $rightPlayer
+     */
+    public function setRightPlayer($rightPlayer)
+    {
+        $this->rightPlayer = $rightPlayer;
+    }
+
+    /**
+     * @return Wonder
+     */
+    public function getLeftWonder()
+    {
+        return $this->leftWonder;
+    }
+
+    /**
+     * @param Wonder $leftWonder
+     */
+    public function setLeftWonder($leftWonder)
+    {
+        $this->leftWonder = $leftWonder;
+    }
+
+    /**
+     * @return Wonder
+     */
+    public function getRightWonder()
+    {
+        return $this->rightWonder;
+    }
+
+    /**
+     * @param Wonder $rightWonder
+     */
+    public function setRightWonder($rightWonder)
+    {
+        $this->rightWonder = $rightWonder;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLeftSide()
+    {
+        return $this->leftSide;
+    }
+
+    /**
+     * @param string $leftSide
+     */
+    public function setLeftSide($leftSide)
+    {
+        $this->leftSide = $leftSide;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRightSide()
+    {
+        return $this->rightSide;
+    }
+
+    /**
+     * @param string $rightSide
+     */
+    public function setRightSide($rightSide)
+    {
+        $this->rightSide = $rightSide;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLeftRank()
+    {
+        return $this->leftRank;
+    }
+
+    /**
+     * @param int $leftRank
+     */
+    public function setLeftRank($leftRank)
+    {
+        $this->leftRank = $leftRank;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRightRank()
+    {
+        return $this->rightRank;
+    }
+
+    /**
+     * @param int $rightRank
+     */
+    public function setRightRank($rightRank)
+    {
+        $this->rightRank = $rightRank;
     }
 }

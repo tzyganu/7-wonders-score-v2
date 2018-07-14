@@ -798,7 +798,7 @@ class Version20180516204903 extends AbstractMigration implements ContainerAwareI
                     $wonder->setOfficial(1);
                 }
                 $wonder->setWonderSet($set);
-                $entityManager->persist($wonder);
+                    $entityManager->persist($wonder);
             }
         }
         $entityManager->flush();

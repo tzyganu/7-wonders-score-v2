@@ -1,0 +1,36 @@
+agg:
+  values:
+    label: Values
+    function:
+    name: c
+    agg: false
+    count: false
+    columnType: false
+  avg:
+    label: Average
+    function: AVG
+    name: avg
+    agg: true
+    count: true
+    columnType: decimal
+  sum:
+    label: Sum
+    function: SUM
+    name: sum
+    agg: true
+    count: true
+    columnType: false
+  min:
+    label: Minimum
+    function: MIN
+    name: min
+    agg: true
+    count: false
+    columnType: false
+  max:
+    label: MAximum
+    function: MAX
+    name: max
+    agg: true
+    count: false
+    columnType: false

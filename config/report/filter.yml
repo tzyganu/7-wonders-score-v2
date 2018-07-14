@@ -1,0 +1,249 @@
+filters:
+  -
+    id: game.id
+    input: text
+    label: "Game Number"
+    name: game.id
+    type: integer
+    operators:
+      - equal
+      - not_equal
+      - in
+      - not_in
+      - less
+      - less_or_equal
+      - greater
+      - greater_or_equal
+      - between
+      - not_between
+  -
+    id: game.playedOn
+    input: text
+    label: "Game Date"
+    name: game.playedOn
+    operators:
+      - equal
+      - between
+    plugin: datepicker
+    plugin_config:
+      -
+        dateFormat: yy-mm-dd
+    type: date
+  -
+    id: game.leaders
+    input: radio
+    label: "Game Played with Leaders"
+    name: game.leaders
+    operators:
+      - equal
+    type: integer
+    values:
+      fixed:
+        1: Yes
+        2: No
+  -
+    id: game.cities
+    input: radio
+    label: "Game Played with Cities"
+    name: game.cities
+    operators:
+      - equal
+    type: integer
+    values:
+      fixed:
+        1: Yes
+        2: No
+  -
+    id: playerCount
+    input: text
+    label: "Player Count"
+    name: score.playerCount
+    type: integer
+    operators:
+      - equal
+      - not_equal
+      - in
+      - not_in
+      - less
+      - less_or_equal
+      - greater
+      - greater_or_equal
+      - between
+      - not_between
+  -
+    id: player
+    label: "Player"
+    name: score.player
+    input: select
+    multiple: true
+    plugin: select2
+    values:
+      entity: App\Entity\Player
+      value: getId
+      label: getName
+    operators:
+      - in
+      - not_in
+  -
+    id: leftPlayer
+    label: "Player On the left"
+    name: score.leftPlayer
+    input: select
+    multiple: true
+    plugin: select2
+    values:
+      entity: App\Entity\Player
+      value: getId
+      label: getName
+    operators:
+      - in
+      - not_in
+  -
+    id: rightPlayer
+    label: "Player On the right"
+    name: score.rightPlayer
+    input: select
+    multiple: true
+    plugin: select2
+    values:
+      entity: App\Entity\Player
+      value: getId
+      label: getName
+    operators:
+      - in
+      - not_in
+  -
+    id: wonder
+    label: "Wonder"
+    name: score.wonder'
+    input: select
+    multiple: true
+    plugin: select2
+    values:
+      entity: App\Entity\Wonder
+      value: getId
+      label: getName
+    operators:
+      - in
+      - not_in
+  -
+    id: leftWonder
+    label: "Wonder on the left"
+    name: score.leftWonder'
+    input: select
+    multiple: true
+    plugin: select2
+    values:
+      entity: App\Entity\Wonder
+      value: getId
+      label: getName
+    operators:
+      - in
+      - not_in
+  -
+    id: rightWonder
+    label: "Wonder on the right"
+    name: score.rightWonder'
+    input: select
+    multiple: true
+    plugin: select2
+    values:
+      entity: App\Entity\Wonder
+      value: getId
+      label: getName
+    operators:
+      - in
+      - not_in
+  -
+    id: side
+    label: "Side"
+    name: score.side'
+    input: select
+    multiple: true
+    plugin: select2
+    values:
+      fixed:
+        A: A
+        B: B
+    operators:
+      - in
+      - not_in
+  -
+    id: leftSide
+    label: "Side on the left"
+    name: score.leftSide'
+    input: select
+    multiple: true
+    plugin: select2
+    values:
+      fixed:
+        A: A
+        B: B
+    operators:
+      - in
+      - not_in
+  -
+    id: rightSide
+    label: "Side on the right"
+    name: score.rightSide'
+    input: select
+    multiple: true
+    plugin: select2
+    values:
+      fixed:
+        A: A
+        B: B
+    operators:
+      - in
+      - not_in
+  -
+    id: rank
+    label: "Rank"
+    name: score.rank'
+    input: text
+    type: integer
+    operators:
+      - equal
+      - not_equal
+      - in
+      - not_in
+      - less
+      - less_or_equal
+      - greater
+      - greater_or_equal
+      - between
+      - not_between
+  -
+    id: leftRank
+    label: "Rank on the left"
+    name: score.leftRank'
+    input: text
+    type: integer
+    operators:
+      - equal
+      - not_equal
+      - in
+      - not_in
+      - less
+      - less_or_equal
+      - greater
+      - greater_or_equal
+      - between
+      - not_between
+  -
+    id: rightRank
+    label: "Rank on the right"
+    name: score.rightRank'
+    input: text
+    type: integer
+    operators:
+      - equal
+      - not_equal
+      - in
+      - not_in
+      - less
+      - less_or_equal
+      - greater
+      - greater_or_equal
+      - between
+      - not_between

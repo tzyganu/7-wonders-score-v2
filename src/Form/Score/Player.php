@@ -26,17 +26,9 @@ class Player extends AbstractType
                     'required' => false,
                     'attr' => [
                         'class' => 'player-select',
-                    ]
-                ]
-            )
-            ->add(
-                'name',
-                null,
-                [
-                    'label' => 'New Player',
-                    'required' => false,
-                    'attr' => [
-                        'class' => 'new-player',
+                    ],
+                    'label_attr' => [
+                        'class' => 'game-player'
                     ]
                 ]
             )

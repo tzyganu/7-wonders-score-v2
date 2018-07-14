@@ -56,6 +56,9 @@
     "doctrine/orm": {
         "version": "v2.6.1"
     },
+    "fourlabs/qbjs-parser": {
+        "version": "1.0"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -175,6 +178,9 @@
     },
     "symfony/property-access": {
         "version": "v4.0.8"
+    },
+    "symfony/property-info": {
+        "version": "v3.4.11"
     },
     "symfony/routing": {
         "version": "4.0",

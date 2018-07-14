@@ -1,0 +1,140 @@
+fields:
+  -
+    label: Player
+    code: player
+    fields:
+      leftPlayer:
+        id: leftPlayer
+        long_label: Left Player
+        label: ''
+        type: link
+        iconClass: ['fa fa-long-arrow-left', 'fa fa-user']
+        labelKey: leftPlayer.name
+        url: player/view
+        params:
+          id: leftPlayer.id
+        group: true
+        agg: false
+      player:
+        id: player
+        long_label: Player
+        label: ''
+        type: link
+        iconClass: ['fa fa-long-arrow-down', 'fa fa-user']
+        labelKey: player.name
+        url: player/view
+        params:
+          id: player.id
+        group: true
+        agg: false
+      rightPlayer:
+        id: rightPlayer
+        long_label: Right Player
+        label: ''
+        type: link
+        iconClass: ['fa fa-long-arrow-right', 'fa fa-user']
+        labelKey: rightPlayer.name
+        url: player/view
+        params:
+          id: rightPlayer.id
+        group: true
+        agg: false
+      leftWonder:
+        id: leftWonder
+        long_label: Left Wonder
+        label: 'Wonder'
+        type: link
+        iconClass: ['fa fa-long-arrow-left']
+        labelKey: leftWonder.name
+        url: wonder/view
+        params:
+          id: leftWonder.id
+        group: true
+        agg: false
+      wonder:
+        id: wonder
+        long_label: Wonder
+        label: 'Wonder'
+        type: link
+        iconClass: ['fa fa-long-arrow-down']
+        labelKey: wonder.name
+        url: wonder/view
+        params:
+          id: wonder.id
+        group: true
+        agg: false
+      rightWonder:
+        id: rightWonder
+        long_label: Right Wonder
+        label: 'Wonder'
+        type: link
+        iconClass: ['fa fa-long-arrow-right']
+        labelKey: rightWonder.name
+        url: wonder/view
+        params:
+          id: rightWonder.id
+        group: true
+        agg: false
+      leftSide:
+        id: leftSide
+        long_label: 'Left Side'
+        label: Side
+        type: text
+        iconClass: ['fa fa-long-arrow-left']
+        index: leftSide
+        group: true
+        add: false
+      side:
+        id: side
+        long_label: 'Side'
+        label: Side
+        type: text
+        iconClass: ['fa fa-long-arrow-down']
+        index: side
+        group: true
+        add: false
+      rightSide:
+        id: rightSide
+        long_label: 'Right Side'
+        label: Side
+        type: text
+        iconClass: ['fa fa-long-arrow-right']
+        index: rightSide
+        group: true
+        add: false
+      leftRank:
+        id: leftRank
+        long_label: 'Left Rank'
+        label: Rank
+        type: integer
+        iconClass: ['fa fa-long-arrow-left']
+        index: leftRank
+        group: true
+        agg: false
+      rank:
+        id: rank
+        long_label: 'Rank'
+        label: Rank
+        type: integer
+        iconClass: ['fa fa-long-arrow-down']
+        index: rank
+        group: true
+        agg: false
+      rightRank:
+        id: rightRank
+        long_label: 'Right Rank'
+        label: Rank
+        type: integer
+        iconClass: ['fa fa-long-arrow-right']
+        index: rightRank
+        group: true
+        agg: false
+      playerCount:
+        id: playerCount
+        long_label: '# Players'
+        label: '#'
+        type: integer
+        iconClass: ['fa fa-user']
+        index: playerCount
+        group: true
+        agg: false

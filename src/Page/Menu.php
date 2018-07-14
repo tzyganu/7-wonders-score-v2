@@ -156,13 +156,12 @@ class Menu
                         'url' => 'report/player',
                         'active' => ['report/player']
                     ],
-//                            'list' => [
-//                                'label' => 'View Wonders',
-//                                'icon' => '',
-//                                'url' => ListEntities::DEFAULT_LIST_PATH,
-//                                'url-params' => [ListEntities::ENTITY_PARAM_NAME => 'wonder'],
-//                                'active' => ['wonder/list']
-//                            ],
+                    'general' => [
+                        'label' => 'General Reports',
+                        'icon' => '',
+                        'url' => 'report/list',
+                        'active' => ['report/general', 'report/list']
+                    ],
                 ]
             ],
         ];

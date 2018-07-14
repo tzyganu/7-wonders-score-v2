@@ -29,6 +29,9 @@ services:
     App\Grid\Provider\Game:
       public: true
 
+    FL\QBJSParser\Serializer\JsonDeserializer:
+      public: true
+
 
     App\Achievement\Calculator\General\Played\Rookie:
       tags: ['achievement.calculator']
@@ -149,5 +152,20 @@ services:
     App\Score\Columns:
       arguments:
         $configFile: '%kernel.project_dir%/config/score/fields.yml'
+    App\Report\ColumnsRendererFactory:
+      arguments:
+        $defaultTemplate: 'report/columns.html.twig'
+    App\Report\Config\Parser:
+      arguments:
+        $source: '%kernel.project_dir%/config/report/parser.yml'
+    App\Report\Config\Filter:
+      arguments:
+        $source: '%kernel.project_dir%/config/report/filter.yml'
+    App\Report\Config\Fields:
+      arguments:
+        $source: '%kernel.project_dir%/config/report/fields.yml'
+    App\Report\Config\Aggregate:
+      arguments:
+        $source: '%kernel.project_dir%/config/report/aggregate.yml'
 
 
