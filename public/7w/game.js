@@ -78,7 +78,7 @@ $.widget('wonders.game', {
             self.checkExtensions();
         });
         this.attachValidation();
-        this.automateGame();
+        // this.automateGame();
     },
 
     attachValidation: function() {

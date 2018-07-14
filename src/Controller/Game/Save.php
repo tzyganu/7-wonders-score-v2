@@ -91,7 +91,7 @@ class Save extends AbstractController
         $game->setLeaders(isset($postData['game']['leaders']));
         $game->setCities(isset($postData['game']['cities']));
         $game->setPlayLeft(isset($postData['game']['playLeft']));
-        $game->setCanExclude(isset($postData['game']['playLeft']));
+        $game->setCanExclude(isset($postData['game']['canExclude']));
         $game->setUser($this->authValidator->getUser());
         /** @var Score[] $scoresByPosition */
         $scoresByPosition = [];
@@ -164,7 +164,6 @@ class Save extends AbstractController
             }
             $this->getDoctrine()->getManager()->flush();
         }
-//        return $this->redirectToRoute('game/view', ['id' => $game->getId()]);
-        return $this->redirectToRoute('game/new');
+        return $this->redirectToRoute('game/view', ['id' => $game->getId()]);
     }
 }
