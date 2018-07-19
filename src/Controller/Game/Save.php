@@ -136,7 +136,7 @@ class Save extends AbstractController
         }
         $playerCount = count($game->getScores());
         $this->ranker->rankScores($game);
-        $game->setPlayerCount(count($playerCount));
+        $game->setPlayerCount($playerCount);
         //attach lef-right to scores
         $playLeft = $game->getPlayLeft();
         foreach ($scoresByPosition as $position => $score) {
