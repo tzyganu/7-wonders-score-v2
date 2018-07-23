@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\Game;
 
+use App\Button\Factory;
 use App\Controller\ListEntities;
 use App\Entity\Game;
 use App\Grid\Loader;
@@ -24,18 +25,28 @@ class View extends AbstractController
      * @var ContainerFactory
      */
     private $containerFactory;
+    /**
+     * @var Factory
+     */
+    private $buttonFactory;
 
     /**
+     * View constructor.
      * @param ManagerRegistry $managerRegistry
+     * @param Loader $gridLoader
+     * @param ContainerFactory $containerFactory
+     * @param Factory $buttonFactory
      */
     public function __construct(
         ManagerRegistry $managerRegistry,
         Loader $gridLoader,
-        ContainerFactory $containerFactory
+        ContainerFactory $containerFactory,
+        Factory $buttonFactory
     ) {
         $this->managerRegistry = $managerRegistry;
         $this->gridLoader = $gridLoader;
         $this->containerFactory = $containerFactory;
+        $this->buttonFactory = $buttonFactory;
     }
     /**
      * @param int $id
@@ -61,6 +72,7 @@ class View extends AbstractController
 
         $grid = $this->gridLoader->loadGrid('game-view');
         $grid->setRows($instance->getScores());
+        $grid->addButton('new-game', $this->getNewGameButton($id));
         $grid->removeColumn('game');
         if (!$instance->getCities()) {
             $grid->removeColumn('cities_score');
@@ -92,5 +104,21 @@ class View extends AbstractController
                 'content' => $tabsContainer->render(),
             ]
         );
+    }
+
+    /**
+     * @param $id
+     * @return \App\Button
+     */
+    private function getNewGameButton($id)
+    {
+        return $this->buttonFactory->create([
+            'label' => 'New Game Same Players',
+            'url' => 'game/new',
+            'params' => [
+                'id' => $id
+            ]
+        ]);
+
     }
 }

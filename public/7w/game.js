@@ -35,6 +35,7 @@ $.widget('wonders.game', {
         defaultPlayers: 3,
         minPlayers: 3,
         maxPlayers: 8,
+        gamePlayers: [],
         addPlayerTrigger: '.add-player',
         wondersCheckboxes: '.wonder-in-play',
         wonderGroupsSelector: '.wonder-set',
@@ -78,6 +79,11 @@ $.widget('wonders.game', {
             self.checkExtensions();
         });
         this.attachValidation();
+        if (this.options.gamePlayers.length) {
+            for (i = 0; i<this.options.gamePlayers.length; i++) {
+                $(this.players['p' + i]).player('setPlayerId', this.options.gamePlayers[i]);
+            }
+        }
         // this.automateGame();
     },
 
@@ -211,6 +217,17 @@ $.widget('wonders.game', {
     },
     shufflePlayers: function() {
         var self = this;
+        //remove empty players
+        for (var i in this.players) {
+            if (this.players.hasOwnProperty(i)) {
+                if (!$(this.players[i]).player('getPlayerId')) {
+                    var widget = $(this.players[i]).player('widget');
+                    this.removePlayer($(this.players[i]).player('getIndex'));
+                    widget.remove();
+                }
+            }
+        }
+        //rearrange the elements
         var _players = Object.values(this.players);
         shuffleArray(_players);
         //rearrange the elements
@@ -341,6 +358,15 @@ $.widget('wonders.player', {
                 $(this).html('<span class="' + icon + '"></span>');
             }
         });
+    },
+    getIndex: function() {
+        return this.options.index;
+    },
+    setPlayerId: function(player) {
+        $(this.element).find('.player-select').val(player).trigger('change');
+    },
+    getPlayerId: function(player) {
+        return $(this.element).find('.player-select').val();
     },
     setWonder:function(wonder) {
         $(this.element).find('.wonder-select').val(wonder).trigger('change');

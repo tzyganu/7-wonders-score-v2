@@ -3,6 +3,7 @@ namespace App\Controller\Game;
 
 use App\Controller\AuthInterface;
 use App\Entity\Category;
+use App\Entity\Game;
 use App\Entity\Player;
 use App\Entity\Wonder;
 use App\Form\ScoreRendererPool;
@@ -17,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -30,16 +32,22 @@ class NewGame extends AbstractController implements AuthInterface
      * @var ScoreRendererPool
      */
     private $scoreRendererPool;
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
 
     /**
      * @param ManagerRegistry $managerRegistry
      */
     public function __construct(
         ManagerRegistry $managerRegistry,
-        ScoreRendererPool $scoreRendererPool
+        ScoreRendererPool $scoreRendererPool,
+        RequestStack $requestStack
     ) {
         $this->managerRegistry = $managerRegistry;
         $this->scoreRendererPool = $scoreRendererPool;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -82,6 +90,14 @@ class NewGame extends AbstractController implements AuthInterface
                 ]
             ]
         );
+        $cloneGame = $this->getClonedGame();
+        $gamePlayers = [];
+        if ($cloneGame) {
+            foreach ($cloneGame->getScores() as $score) {
+                $gamePlayers[] = $score->getPlayer()->getId();
+            }
+            $count = count($gamePlayers);
+        }
         $formBuilder->add($gameForm);
         $templateForm = $formBuilder->create('__id__', FormType::class);
         $templateForm->add('player', \App\Form\Score\Player::class);
@@ -102,6 +118,7 @@ class NewGame extends AbstractController implements AuthInterface
                 'wonderSets' => $wondersSets,
                 'players' => $players,
                 'playerCount' => $count,
+                'gamePlayers' => json_encode($gamePlayers),
                 'form' => $formBuilder->getForm()->createView(),
                 'wondersConfig' => $this->getWondersConfig(),
             ]
@@ -127,5 +144,21 @@ class NewGame extends AbstractController implements AuthInterface
             ];
         }
         return json_encode($config);
+    }
+
+    /**
+     * @return null|Game
+     */
+    private function getClonedGame()
+    {
+        $gameId = $this->requestStack->getCurrentRequest()->get('id');
+        if (!$gameId) {
+            return null;
+        }
+        $game = $this->managerRegistry->getRepository(Game::class)->find($gameId);
+        if (!$game) {
+            return null;
+        }
+        return $game;
     }
 }
