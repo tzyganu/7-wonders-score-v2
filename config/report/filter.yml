@@ -17,6 +17,16 @@ filters:
       - between
       - not_between
   -
+    id: game.canExclude
+    label: "Exclude Games marked as tampered"
+    name: game.canExclude
+    input: radio
+    values:
+      fixed:
+        0: Yes
+    operators:
+      - equal
+  -
     id: game.playedOn
     input: text
     label: "Game Date"

@@ -14,7 +14,10 @@ fieldsToProperties:
   - game.leaders
   - game.cities
   - game.id
+  - game.canExclude
   - rank
+  - leftRank
+  - rightRank
 fieldPrefixesToClasses:
   game: App\Entity\Game
   player: App\Entity\Player
