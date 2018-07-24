@@ -28,7 +28,7 @@ class Troy implements CalculatorInterface
         $max = 0;
         foreach ($player->getScores() as $score) {
             if ($score->getCitiesScore() > $max) {
-                $max = $score->getCivicScore();
+                $max = $score->getCitiesScore();
             }
         }
         return new Progress($max, static::SCORE_LIMIT);
