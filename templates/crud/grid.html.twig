@@ -12,6 +12,11 @@
                                 </div>
                             {% endfor %}
                         {% endif %}
+                        <div class="pull-right">
+                            {% if not grid.isHideColumnToggle() %}
+                                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#{{ grid.getId() }}-configure-modal">Configure grid</a>
+                            {% endif %}
+                        </div>
                     </div>
                     <div class="box-body">
                         <table id="{{ grid.getId() }}" class="table table-bordered table-hover">
@@ -54,10 +59,62 @@
                 </div>
             </div>
         </div>
+        {% if not grid.isHideColumnToggle() %}
+            <div class="modal" tabindex="-1" role="dialog" id="{{ grid.getId() }}-configure-modal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Configure grid columns</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                            {% for column in grid.getColumns() %}
+                                <div class="col-lg-3" style="min-height: 40px;">
+                                    <input type="checkbox" checked="checked" id="{{ grid.getId() }}-column-toggle-{{ loop.index - 1 }}" class="{{ grid.getId() }}-column-toggler" data-column="{{ loop.index-1 }}" />
+                                    {% if column.getIconClass() %}
+                                        {% if column.getIconClass() is iterable %}
+                                            {% for class in column.getIconClass() %}
+                                                <span class="{{ class }}"></span>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span class="{{ column.getIconClass }}"></span>
+                                        {% endif %}
+                                    {% endif %}
+                                    <label for="{{ grid.getId() }}-column-toggle-{{ loop.index - 1 }}">{{ column.getLabel() | raw}}</label>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-toggle="column-toggle-all">Select All</button>
+                            <button type="button" class="btn btn-primary" data-toggle="column-toggle-none">Unselect all</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         <script type="text/javascript">
             jQuery(document).ready(function () {
                 {% if grid.useDataTable()  %}
-                jQuery('#{{ grid.getId() }}').DataTable({{ grid.getDataTableConfig()|raw }});
+                var grid = jQuery('#{{ grid.getId() }}').DataTable({{ grid.getDataTableConfig()|raw }});
+                    {% if not grid.isHideColumnToggle() %}
+                        jQuery('.{{ grid.getId() }}-column-toggler').each(function() {
+                            jQuery(this).on('change', function() {
+                                var column = grid.column( $(this).attr('data-column'));
+                                column.visible($(this).prop('checked'));
+                                $('#{{ grid.getId() }}').css('width', '100%');
+                            });
+                        });
+                        $('#{{ grid.getId() }}-configure-modal').find('[data-toggle=column-toggle-all]').on('click', function() {
+                            jQuery('.{{ grid.getId() }}-column-toggler').prop('checked', true).trigger('change');
+                        });
+                        $('#{{ grid.getId() }}-configure-modal').find('[data-toggle=column-toggle-none]').on('click', function() {
+                            jQuery('.{{ grid.getId() }}-column-toggler').prop('checked', false).trigger('change');
+                        });
+                    {% endif %}
                 {% endif %}
             });
         </script>
