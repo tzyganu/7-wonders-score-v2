@@ -56,6 +56,10 @@ class Grid
      */
     private $emptyMessage = 'There are no records';
     /**
+     * @var bool
+     */
+    private $hideColumnToggle = false;
+    /**
      * @var string
      */
     private $template = 'crud/grid.html.twig';
@@ -84,7 +88,8 @@ class Grid
             'showSorting',
             'showPagingAll',
             'pagingValues',
-            'template'
+            'template',
+            'hideColumnToggle'
         ];
         foreach ($fields as $field) {
             if (isset($options[$field])) {
@@ -323,6 +328,22 @@ class Grid
     public function render()
     {
         return $this->twig->render($this->getTemplate(), ['grid' => $this ]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHideColumnToggle()
+    {
+        return $this->hideColumnToggle;
+    }
+
+    /**
+     * @param bool $hideColumnToggle
+     */
+    public function setHideColumnToggle($hideColumnToggle)
+    {
+        $this->hideColumnToggle = $hideColumnToggle;
     }
 
     /**
